@@ -18,6 +18,17 @@ function verifyIfExistsAccount(request, response, next) {
   return next()
 }
 
+function getBalance(statement) {
+  const balance = statement.reduce((acc, operation) => {
+    if(operation.type === 'credit'){
+      return acc + operation.amount
+    }
+    return acc - operation.amount
+  }, 0)
+
+  return balance
+}
+
 app.post('/account', (request, response) => {
   const { cpf, name } = request.body
 
@@ -46,14 +57,36 @@ app.get('/statement', (request, response) => {
 })
 
 app.post('/deposit', (request, response) => {
-  const { description, amout } = request.body
+  const { description, amount } = request.body
   const { costumer } = request
 
   const statementOperation = {
     description,
-    amout,
+    amount,
     createdAt: new Date(),
     type: 'credit'
+  }
+
+  costumer.statement.push(statementOperation)
+
+  return response.status(201).send()
+})
+
+app.post('/withdraw', (request, response) => {
+  const { amount } = request.body
+  const { costumer } = request
+
+  const balance = getBalance(costumer.statement)
+
+  console.log(balance)
+
+  if(balance < amount) return response.status(400).json({ error: 'Insulficient funds' })
+
+  const statementOperation = {
+    amount,
+    description: 'withdraw',
+    createdAt: new Date(),
+    type: 'debit'
   }
 
   costumer.statement.push(statementOperation)
