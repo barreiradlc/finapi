@@ -74,6 +74,14 @@ app.delete('/account', (request, response) => {
 })
 
 
+app.get('/balance', (request, response) => {
+  const { costumer } = request
+  
+  const balance = getBalance(costumer.statement)
+
+  return response.json({ balance })
+})
+
 app.get('/statement', (request, response) => {
   const { costumer } = request
   
