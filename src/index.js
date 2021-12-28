@@ -59,6 +59,12 @@ app.put('/account', (request, response) => {
   return response.json(costumer)
 })
 
+app.get('/account', (request, response) => {
+  const { costumer } = request
+
+  return response.json(costumer)
+})
+
 
 app.get('/statement', (request, response) => {
   const { costumer } = request
