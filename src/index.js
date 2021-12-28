@@ -65,6 +65,14 @@ app.get('/account', (request, response) => {
   return response.json(costumer)
 })
 
+app.delete('/account', (request, response) => {
+  const { costumer } = request
+
+  costumers.splice(costumer, 1)
+
+  return response.status(201).json(costumers)
+})
+
 
 app.get('/statement', (request, response) => {
   const { costumer } = request
