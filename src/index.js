@@ -56,6 +56,17 @@ app.get('/statement', (request, response) => {
   return response.json(costumer.statement)
 })
 
+app.get('/statement/date', (request, response) => {
+  const { costumer } = request
+  const { date } = request.query
+
+  const dateFormat = new Date(date + "00:00")
+
+  const statement = costumer.statement.filter(statement.createdAt.toDateString() === new Date((dateFormat).toUTCString()))
+
+   
+})
+
 app.post('/deposit', (request, response) => {
   const { description, amount } = request.body
   const { costumer } = request
@@ -93,5 +104,6 @@ app.post('/withdraw', (request, response) => {
 
   return response.status(201).send()
 })
+
 
 app.listen(3333)
