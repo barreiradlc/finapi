@@ -23,4 +23,14 @@ app.post('/account', (request, response) => {
   return response.status(200).send()
 })
 
+app.get('/statement', (request, response) => {
+  const { cpf } = request.headers
+
+  const costumer = costumers.find(costumer => costumer.cpf === cpf)
+
+  if(!costumer) return response.status(400).json({ message: "Costumer not found" })
+
+  return response.json(costumer.statement)
+})
+
 app.listen(3333)
