@@ -1,7 +1,7 @@
 const express = require('express')
 const { v4: uuidV4 } = require('uuid')
-
 const app = express()
+
 app.use(express.json())
 
 const costumers = []
@@ -25,22 +25,40 @@ app.post('/account', (request, response) => {
 
   if(costumerAlreadyExists) return response.status(400).json({ error: "Costumer already exists" })
 
-  costumers.push({
+  const newCostumer = {
     cpf,
     name,
     id: uuidV4(),
     statement: []
-  })
+  }
 
-  return response.status(200).send()
+  costumers.push(newCostumer)
+
+  return response.json(newCostumer)
 })
 
 app.use(verifyIfExistsAccount)
 
 app.get('/statement', (request, response) => {
   const { costumer } = request
-
+  
   return response.json(costumer.statement)
+})
+
+app.post('/deposit', (request, response) => {
+  const { description, amout } = request.body
+  const { costumer } = request
+
+  const statementOperation = {
+    description,
+    amout,
+    createdAt: new Date(),
+    type: 'credit'
+  }
+
+  costumer.statement.push(statementOperation)
+
+  return response.status(201).send()
 })
 
 app.listen(3333)
