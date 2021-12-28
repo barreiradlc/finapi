@@ -50,6 +50,16 @@ app.post('/account', (request, response) => {
 
 app.use(verifyIfExistsAccount)
 
+app.put('/account', (request, response) => {
+  const { costumer } = request
+  const { name } = request.body
+
+  costumer.name = name
+
+  return response.json(costumer)
+})
+
+
 app.get('/statement', (request, response) => {
   const { costumer } = request
   
